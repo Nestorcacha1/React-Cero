@@ -33,3 +33,7 @@ form {
 .pelicula {
 	text-align: center;
 }
+
+.pelicula h3 {
+	padding-bottom: 0;
+}

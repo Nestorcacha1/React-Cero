@@ -1,5 +1,5 @@
 import { useState } from 'react'
-export function TwitterFollwCard({ children, username, initialIsFollwing }) {
+export function TwitterFollowCard({ children, username, initialIsFollwing }) {
 	const [isFollwing, setFollwing] = useState(initialIsFollwing)
 
 	const imgeScr = `https://unavatar.io/${username}`
@@ -23,7 +23,8 @@ export function TwitterFollwCard({ children, username, initialIsFollwing }) {
 			</header>
 			<section>
 				<button className={buttonClass} onClick={handleClieck}>
-					{text}
+					<span className='tw-followCard-text '>{text}</span>
+					<span className='tw-followCard-stopFollow'>Dejar de Seguir</span>
 				</button>
 			</section>
 		</article>
