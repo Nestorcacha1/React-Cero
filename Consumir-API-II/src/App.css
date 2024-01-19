@@ -32,8 +32,11 @@ form {
 
 .pelicula {
 	text-align: center;
+	margin-top: 8px;
 }
 
-.pelicula h3 {
-	padding-bottom: 0;
+.pelicula h3,
+.pelicula p {
+	margin: 0;
+	padding: 0;
 }

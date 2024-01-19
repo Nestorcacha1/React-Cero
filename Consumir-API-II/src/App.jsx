@@ -1,8 +1,8 @@
 import './App.css'
 import { UsarPeluculas } from './hooks/UsarPeliculas'
 import { Peliculas } from './components/Peliculas'
-import { useEffect, useState, useRef } from 'react'
-
+import { useEffect, useState, useRef, useCallback } from 'react'
+import debounce from 'just-debounce-it'
 function buscarP() {
 	const [buscar, actualizarBuscar] = useState('')
 	const [error, setError] = useState(null)
@@ -32,16 +32,30 @@ function buscarP() {
 }
 
 function App() {
-	const { peliculas } = UsarPeluculas()
+	const [orden, setOrden] = useState(false)
+
 	const { buscar, actualizarBuscar, error } = buscarP()
+	const { peliculas, cargando, getPelicula } = UsarPeluculas({ buscar, orden })
+
+	const debounceGetPelicula = useCallback(
+		debounce(buscar => {
+			console.log('buscando', buscar)
+			getPelicula({ buscar })
+		}, 300),
+		[],
+	)
 
 	const handleSubmit = event => {
 		event.preventDefault()
-		console.log({ buscar })
+		getPelicula({ buscar })
 	}
-
+	const handleSort = () => {
+		setOrden(!orden)
+	}
 	const handleChenge = event => {
-		actualizarBuscar(event.target.value)
+		const newbuscar = event.target.value
+		actualizarBuscar(newbuscar)
+		debounceGetPelicula(newbuscar)
 	}
 
 	return (
@@ -56,12 +70,17 @@ function App() {
 						type='text'
 						placeholder='Ingresa nombre de la pelicula'
 					/>
+					<input type='checkbox' onChange={handleSort} checked={orden} />
 					<button type='submit'>Buscar</button>
 				</form>
 				{error && <p style={{ color: 'red' }}>{error}</p>}
 			</header>
 			<main>
-				<Peliculas peliculas={peliculas}></Peliculas>
+				{cargando ? (
+					<p>Cargando...</p>
+				) : (
+					<Peliculas peliculas={peliculas}></Peliculas>
+				)}
 			</main>
 		</div>
 	)
